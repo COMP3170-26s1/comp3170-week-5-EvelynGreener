@@ -26,6 +26,7 @@ public class Scene extends SceneObject {
 		flower.setParent(this);	
 		flowerHead.setParent(flower);	
 		flower.getMatrix().translate(position.x,position.y,0.0f);
+		flowerHead.getMatrix().translate(position.x,1.5f,0.0f);
 	}
 
 	public void update(InputManager input, float dt) {
