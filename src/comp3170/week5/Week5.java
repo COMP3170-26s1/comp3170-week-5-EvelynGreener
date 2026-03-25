@@ -38,7 +38,7 @@ public class Week5 implements IWindowListener {
 	public void init() {
 		input = new InputManager(window); // create an input manager to listen for keypresses and mouse events		
 		oldTime = System.currentTimeMillis(); // initialise oldTime
-		
+		//sceneCam = scene.sceneCam();
 		new ShaderLibrary(DIRECTORY);
 		scene = new Scene();
 	}
@@ -72,8 +72,11 @@ public class Week5 implements IWindowListener {
 		
 		// TODO: Use the view and projection matricies to construct the mvpMatrix. (TASK 2)
 		//			Then send it down the scene graph!
+		
+//		sceneCam.GetViewMatrix(viewMatrix);
+//		sceneCam.GetProjectionMatrix(projectionMatrix);
+//		projectionMatrix.mul(viewMatrix, mvpMatrix);
 		scene.draw(mvpMatrix);
-			
 	}
 
 	@Override

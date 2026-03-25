@@ -1,5 +1,11 @@
 package comp3170.week5.sceneobjects;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -14,10 +20,12 @@ public class FlowerHead extends SceneObject {
 	private static final String FRAGMENT_SHADER = "fragment.glsl";
 	private Shader shader;
 
-	private Vector3f petalColour = new Vector3f(1.0f,1.0f,1.0f);
+	private Vector3f petalColour = new Vector3f(1.0f,1.0f,0.0f);
 
 	private Vector4f[] vertices;
 	private int vertexBuffer;
+	private int[] indices;
+	private int indexBuffer;
 
 	public FlowerHead(int nPetals, Vector3f colour) {
 		
@@ -26,7 +34,21 @@ public class FlowerHead extends SceneObject {
 		// Note that this may involve moving some code OUT of this class!
 		
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);		
-		
+		vertices = new Vector4f[] {
+				new Vector4f(0.0f,0.0f,0.0f,1.0f),
+				new Vector4f(-0.25f, 0.5f,0.0f,1.0f),
+				new Vector4f(0.25f,0.5f,0.0f,1.0f),
+				new Vector4f(0.0f,0.75f,0.0f,1.0f),
+			};
+			//@formatter:on
+			vertexBuffer = GLBuffers.createBuffer(vertices);
+			
+		    indices = new int[] {
+			    	0, 3, 1,
+			    	0, 2, 3,
+			};
+			    
+			indexBuffer = GLBuffers.createIndexBuffer(indices);
 		petalColour = colour;
 	}
 
@@ -36,5 +58,12 @@ public class FlowerHead extends SceneObject {
 
 	public void drawSelf(Matrix4f mvpMatrix) {
 		// TODO: Add any appropriate draw code. (TASK 1)
+		shader.enable();
+		shader.setUniform("u_mvpMatrix", mvpMatrix);
+	    shader.setAttribute("a_position", vertexBuffer);
+	    shader.setUniform("u_colour", petalColour);	    
+	    
+	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	    glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 	}
 }
